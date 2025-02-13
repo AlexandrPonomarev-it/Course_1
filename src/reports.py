@@ -1,0 +1,45 @@
+import datetime
+from datetime import timedelta
+import json
+from collections import defaultdict
+from datetime import datetime
+from typing import Any, Optional
+
+import pandas as pd
+
+from src.utils import date_input, read_excel_file
+
+
+def spending_by_category(transactions: pd.DataFrame, category: str, control_date: Optional[str] = None) -> Any:
+    if control_date is None:
+        control_date = datetime.now()
+    three_months_ago = control_date - timedelta(days=90)
+    list_of_operations_of_the_3_month = []
+    for transact in transactions:
+        date_transactions = datetime.strptime(transact["Дата операции"], "%d.%m.%Y %H:%M:%S")
+        if three_months_ago <= date_transactions <= control_date:
+            list_of_operations_of_the_3_month.append(transact)
+
+    list_category = []
+
+    for transaction in list_of_operations_of_the_3_month:
+        list_category.append(
+            {transaction["Категория"]: transaction["Сумма операции с округлением"]}
+        )
+
+    category_list_len = defaultdict(list)
+    for cat in list_category:
+        for key, value in cat.items():
+            category_list_len[key].append(value)
+
+    sum_category = []
+    for key, value in category_list_len.items():
+        if key == category:
+            sum_category.append({category: value})
+
+    return json.dumps(sum_category, ensure_ascii=False)
+
+
+category_input = input("Введите название категории: ").title()
+print(spending_by_category(read_excel_file(), category_input, date_input()))
+
