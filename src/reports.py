@@ -3,13 +3,29 @@ from datetime import timedelta
 import json
 from collections import defaultdict
 from datetime import datetime
-from typing import Any, Optional
+from functools import wraps
+from typing import Any, Optional, Callable
 
 import pandas as pd
 
 from src.utils import date_input, read_excel_file
 
+def writing_the_result_to_a_file(filename: Optional[str] = None) -> Callable:
+    """
+    Декоратор позволяет записывать данные из функции в файл
+    """
+    def wrapper(func: Any) -> Any:
+        @wraps(func)
+        def inner(*args: Any, **kwargs: Any) -> Any:
+                result = func(*args, **kwargs)
+                with open(filename, 'w') as file:
+                    file.write(result)
+                return result
+        return inner
+    return wrapper
 
+
+@writing_the_result_to_a_file("../result_of_the_reports.json")
 def spending_by_category(transactions: pd.DataFrame, category: str, control_date: Optional[str] = None) -> Any:
     if control_date is None:
         control_date = datetime.now()

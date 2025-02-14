@@ -9,13 +9,14 @@ def read_excel_file() -> Any:
     список транзакций"""
     try:
         df_excel = pd.read_excel('../operations.xlsx')
-        list_transaction_excel = list(to_dict(df_excel, orient="records"))
+        list_transaction_excel = list(df_excel.to_dict(orient="records"))
 
         return list_transaction_excel
     except ValueError:
         return "Дынные в файле отсутствуют или не соответствуют формату"
     except FileNotFoundError:
         return "Файл не найден"
+
 
 
 def greeting_by_current_time():

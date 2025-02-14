@@ -91,14 +91,14 @@ def currency_conversion_function_1() -> Any:
             if key == "user_currencies":
                 user_settings_list += values
 
-    api_url = f"https://api.currencylayer.com/live?access_key=037e8e04d040733632e1169c45c8ddc1&source={user_settings_list[0]}&currencies=RUB"
+    api_url = f"https://api.apilayer.com/currency_data/convert?to=RUB&from={user_settings_list[0]}&amount=1"
     headers = {"apikey": api_key_cur}
 
     response = requests.get(api_url, headers=headers)
     result = response.text
     dict_result = json.loads(result)
 
-    return round(dict_result["quotes"]["USDRUB"], 2)
+    return round(dict_result["result"], 2)
 
 
 def currency_conversion_function_2() -> Any:
@@ -113,14 +113,14 @@ def currency_conversion_function_2() -> Any:
                 user_settings_list += values
 
 
-    api_url = f"https://api.currencylayer.com/live?access_key=037e8e04d040733632e1169c45c8ddc1&source={user_settings_list[1]}&currencies=RUB"
+    api_url = f"https://api.apilayer.com/currency_data/convert?to=RUB&from={user_settings_list[1]}&amount=1"
     headers = {"apikey": api_key_cur}
 
     response = requests.get(api_url, headers=headers)
     result = response.text
     dict_result = json.loads(result)
 
-    return round(dict_result["quotes"]["EURRUB"], 2)
+    return round(dict_result["result"], 2)
 
 
 def stock_conversion_function() -> Any:
