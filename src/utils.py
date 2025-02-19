@@ -1,25 +1,24 @@
-from typing import Any
 from datetime import datetime
+from typing import Any
 
 import pandas as pd
 
 
-def read_excel_file() -> Any:
+def read_excel_file() -> list:
     """Функция для считывания финансовых операций из excel, которая возвращает
     список транзакций"""
     try:
-        df_excel = pd.read_excel('../operations.xlsx')
+        df_excel = pd.read_excel("../operations.xlsx")
         list_transaction_excel = list(df_excel.to_dict(orient="records"))
 
         return list_transaction_excel
     except ValueError:
-        return "Дынные в файле отсутствуют или не соответствуют формату"
+        return []
     except FileNotFoundError:
-        return "Файл не найден"
+        return []
 
 
-
-def greeting_by_current_time():
+def greeting_by_current_time() -> str:
     """Функция возвращает приветствие в зависимости от времени суток"""
     current_date_time = datetime.now()
     if 00 <= current_date_time.hour < 6:
@@ -31,17 +30,25 @@ def greeting_by_current_time():
     elif 18 <= current_date_time.hour <= 23:
         return "Добрый вечер"
     else:
-        "Невозможно определить время суток"
+        return "Невозможно определить время суток"
 
 
-def date_input():
-    """Функция получает от пользователя дату в заданном формате"""
-    year = int(input('Введите год: '))
-    month = int(input('Введите месяц: '))
-    day = int(input('Введите день: '))
-    control_time = datetime.now()
-    hour = control_time.hour
-    minute = control_time.minute
-    second = round(control_time.second)
-    control_date = datetime(year, month, day, hour, minute, second)
-    return control_date
+def date_input() -> Any:
+    """Функция получает от пользователя дату в заданном формате, если введенные данные
+    не соответствуют определенной дате, функция возвращает текущую дату"""
+    try:
+        year = int(input("Введите год: "))
+        month = int(input("Введите месяц: "))
+        day = int(input("Введите день: "))
+        control_time = datetime.now()
+        hour = control_time.hour
+        minute = control_time.minute
+        second = round(control_time.second)
+        control_date = datetime(year, month, day, hour, minute, second)
+        return control_date
+    except ValueError:
+        control_time = datetime.now()
+        return control_time.strftime("%Y.%m.%d %H:%M:%S")
+    except OverflowError:
+        control_time = datetime.now()
+        return control_time.strftime("%Y.%m.%d %H:%M:%S")
